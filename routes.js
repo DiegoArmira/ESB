@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios')
-SistemUrl = "http://localhost:3636";
+SistemUrl = "http://18.118.111.108:3636";
 
 router.get('/api/products', (req, res) => {
     if(parseInt(req.body.sistema) == 18){
@@ -31,7 +31,7 @@ router.get('/api/products', (req, res) => {
         });
 
     }else{
-        SistemUrl = "http://localhost:3636";
+        SistemUrl = "http://18.118.111.108:3636";
 
         new Promise((resolve, reject) => {
             axios.get(SistemUrl+'/api/products', {
@@ -86,7 +86,7 @@ router.post('/api/users/login', (req, res) => {
         });
 
     }else{
-        SistemUrl = "http://localhost:3636";
+        SistemUrl = "http://18.118.111.108:3636";
 
         new Promise((resolve, reject) => {
             axios.post(SistemUrl+'/api/users/login', {
