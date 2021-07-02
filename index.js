@@ -1,71 +1,88 @@
-const express = require('express');
-const app = express();
-let SistemUrl = () => "127.0.0.1";
+#!/usr/bin/env node
 
-let addressing = (req, res, next) => {
+/**
+ * Module dependencies.
+ */
+const app = require('./app');
+const debug = require('debug')('mega-back:server');
+const http = require('http');
 
-    if(req.system = "grupo17"){
-        SistemUrl = environment.serverURL;
-    }
-    console.log('Peticion de tipo: ', req.method );
-    next();
+/**
+ * Get port from environment and store in Express.
+ */
+const port = normalizePort('3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+const server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
 }
 
-app.get('/api/products', (req, res) => {
+/**
+ * Event listener for HTTP server "error" event.
+ */
 
-    return this.http.get(this.SistemUrl + 'products/' + id);
-});
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
 
-app.post('/api/users/login', (req, res) => {
+  const bind = typeof port === 'string'
+      ? 'Pipe ' + port
+      : 'Port ' + port;
 
-    return this.http.post(`${this.SistemUrl}users/login`,{"email":req.usuario,"password":req.password})
-});
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
 
-app.post('/api/users/registro', (req, res) => {
+/**
+ * Event listener for HTTP server "listening" event.
+ */
 
-    var send={
-        nombres:req.nombre,
-        direccion:req.direccion,
-        password:req.password,
-        direccionFisica:req.direccionFisica
-    }
-    return this.http.post(`${this.SistemUrl}users/registro`,send)
-});
-
-app.post('/api/orders/payment', (req, res) => {
-
-    this.httpClient.post(`${this.ServerURL}orders/payment`, null).subscribe(
-
-        (res ) => {
-            console.clear();
-            if (res.success) {
-                this.resetServerData();
-                this.httpClient.post(`${this.ServerURL}orders/new`, {
-                    userId: userId, 
-                    products: this.cartDataClient.prodData
-                }).subscribe(() => {
-                    this.orderService.getSingleOrder(data.order_id).then(prods => {
-                        if (data.success) {
-                            const navigationExtras = {
-                                state: {
-                                    message: data.message,
-                                    products: prods,
-                                    orderId: data.order_id,
-                                    total: this.cartDataClient.total
-                                }
-                            };
-                            this.spinner.hide().then();
-                            return ('cart', JSON.stringify(this.cartDataClient));
-                        }
-                    })
-                });
-            }
-        }
-    );
-});
-
-app.listen(3000, () => {
-
-    console.log('App listening on port 3000!')
-
-});
+function onListening() {
+  const addr = server.address();
+  const bind = typeof addr === 'string'
+      ? 'pipe ' + addr
+      : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+  console.log('Listening on ' + bind);
+}
